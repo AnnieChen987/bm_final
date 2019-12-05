@@ -9,3 +9,53 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+library(tidyverse)
+library(arsenal)
+require(knitr)
+require(survival)
+data_0=read_csv("Lawsuit.csv") %>% 
+  janitor::clean_names()
+data=data_0 %>% mutate(
+  total_sal=sal94+sal95,
+  mean_sal=total_sal/2
+) %>% 
+  select(-sal94,-sal95,-total_sal)
+  
+```
+
+```{r}
+my_labels2 <- list(dept = "Dept,n%", clin="Clin n%", cert="Cert,n%",prate="Publication rate",exper="Years since obtaining MD",
+                   mean_sal="Salary",rank="Rank,n%")
+
+ my_controls <- tableby.control(total = T,
+  test=T,  
+  digits=4,
+  numeric.stats = c("meansd", "medianq1q3"),
+  cat.stats = c("countpct"),
+  stats.labels = list(
+    meansd ="Mean (SD)",
+    medianq1q3 = "Median (Q1, Q3)",
+    countpct = "N (%)"))
+```
+
+```{r}
+data_1<-data %>% 
+  mutate(dept=factor(dept, labels=c("Molecular Biology","Physiology","Genetics","Pediatrics","Medicine","Surgery")),
+         gender=factor(gender, labels=c("Male","Female")),
+         clin=factor(clin, labels=c("Primarily clinical emphasis,","Primarily research emphasis")),
+         cert=factor(cert, labels=c("Board certified","not certified")),
+         rank=factor(rank,label=c("Assistant","Associate","Full professor"))
+         )
+```
+
+
+```{r}
+
+table <- tableby(gender ~ dept + clin+ cert + prate+exper+rank+mean_sal, data=data_1,control=my_controls)
+c=summary(table, title = "Table1:Descriptive statistics for by Gender and Test", labelTranslations = my_labels2, text=T)
+knitr::kable(c)
+
+```
+
+
