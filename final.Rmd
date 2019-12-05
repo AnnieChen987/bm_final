@@ -9,6 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+## table1
 ```{r}
 library(tidyverse)
 library(arsenal)
@@ -55,7 +56,24 @@ data_1<-data %>%
 table <- tableby(gender ~ dept + clin+ cert + prate+exper+rank+mean_sal, data=data_1,control=my_controls)
 c=summary(table, title = "Table1:Descriptive statistics for by Gender and Test", labelTranslations = my_labels2, text=T)
 knitr::kable(c)
-
 ```
+
+## distribution of y
+
+```{r}
+ggplot(data_1,aes(x=mean_sal))+geom_histogram(aes(y=..density..)) + geom_density(col = "black",alpha=0)
+```
+not normal
+
+```{r}
+library(HH)
+data_2=data_1 %>% 
+  mutate(
+    log_sal=log(mean_sal)
+  )
+  ggplot(data_2,aes(x=log_sal))+geom_histogram(aes(y=..density..)) + geom_density(col = "black",alpha=0)
+```
+seems normal
+
 
 
