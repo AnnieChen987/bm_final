@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,message = FALSE,warning = FALSE)
 ```
 
 ## table1
@@ -73,6 +73,7 @@ data_2=data_1 %>%
   )
   ggplot(data_2,aes(x=log_sal))+geom_histogram(aes(y=..density..)) + geom_density(col = "black",alpha=0)
 ```
+
 seems normal
 
 
