@@ -3,6 +3,8 @@ title: "final"
 author: "Sibei Liu"
 date: "2019/12/3"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -13,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE,message = FALSE,warning = FALSE)
 ```{r}
 library(tidyverse)
 library(arsenal)
-require(knitr)
+library(knitr)
 require(survival)
 data_0=read_csv("Lawsuit.csv") %>% 
   janitor::clean_names()
@@ -72,9 +74,31 @@ data_2=data_1 %>%
     log_sal=log(mean_sal)
   )
   ggplot(data_2,aes(x=log_sal))+geom_histogram(aes(y=..density..)) + geom_density(col = "black",alpha=0)
+data_2=data_2 %>% 
+    dplyr::select(-id,-mean_sal)
 ```
 
 seems normal
 
+```{r}
+muli1=lm(log_sal~.,data=data_2)
+step(muli1) %>% 
+  summary()
+```
 
+```{r}
+# colinearity
+library(rms)
+vif(muli1)
+```
+
+```{r}
+# correlation
+pairs(data_2)
+# normality
+library(DataExplorer)
+plot_qq(data_2)
+# categorical
+plot_bar(data_2, maxcat = 20, parallel = TRUE)
+```
 
