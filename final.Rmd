@@ -81,9 +81,33 @@ data_2=data_2 %>%
 seems normal
 
 ```{r}
+# stepwise
 muli1=lm(log_sal~.,data=data_2)
 step(muli1) %>% 
   summary()
+```
+
+```{r}
+muli2=lm(formula = log_sal ~ gender + dept + clin + cert + prate + exper + rank, 
+    data = data_2)
+summary(muli2)
+muli3=lm(formula = log_sal ~ gender + dept + clin + cert + exper + rank, 
+    data = data_2)
+summary(muli3)
+(0.025763-0.019536)/0.019536
+```
+
+```{r}
+# foreward
+full_model = lm(log_sal ~ . ,data = data_2)
+step_null <- lm(log_sal ~1, data = data_2)
+for_model <- step(step_null, scope = list(lower = step_null, upper = full_model), direction = "forward")
+```
+
+```{r}
+# interaction
+interact_lm=lm(log_sal ~ gender*dept*clin*cert*exper*rank, data=data_2)
+summary(interact_lm)
 ```
 
 ```{r}
