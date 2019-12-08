@@ -227,9 +227,10 @@ summary(gender_inter6)
 
 gender_method2=lm(log_sal~gender*rank+dept+clin+cert+exper,data=data_2)
 summary(gender_method2)
+```
 
-
-## the stratified models are due to the rank levels
+```{r}
+##  then strtified the rank levels
 data_stra_assi=data_2 %>% 
   filter(rank=="Assistant")
 data_stra_asso=data_2 %>% 
