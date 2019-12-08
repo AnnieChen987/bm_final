@@ -122,6 +122,7 @@ plot_qq(data_2)
 plot_bar(data_2, maxcat = 20, parallel = TRUE)
 
 
+#method 1, try the interaction along with confounders
 ## try to find confounder
 ## put all variable into model-dept, clin,cert, prate,exper,rank
 
@@ -196,6 +197,54 @@ summary(gender_inter)
 
 ## check the vif
 vif(gender_inter)
+## remove prate
+##then the model is
+gender_method1=lm(log_sal~gender*clin+gender*exper+dept+cert,data=data_2)
+summary(gender_method1)
+## but hard to find the stratified model, because the exper is continous variable
+```
+
+# methos 2 try confounders in above same way, but find the interaction independtly.
+```{r}
+gender_inter1=lm(log_sal~gender*dept,data=data_2)
+summary(gender_inter1)
+## interaction term  non-sig
+gender_inter2=lm(log_sal~gender*clin,data=data_2)
+summary(gender_inter2)
+## interaction term  non-sig
+gender_inter3=lm(log_sal~gender*cert,data=data_2)
+summary(gender_inter3)
+## interaction term  non-sig
+gender_inter4=lm(log_sal~gender*prate,data=data_2)
+summary(gender_inter4)
+## interaction term  non-sig
+gender_inter5=lm(log_sal~gender*exper,data=data_2)
+summary(gender_inter5)
+## interaction term  non-sig
+gender_inter6=lm(log_sal~gender*rank,data=data_2)
+summary(gender_inter6)
+## interaction term sig
+
+gender_method2=lm(log_sal~gender*rank+dept+clin+cert+exper,data=data_2)
+summary(gender_method2)
+
+
+## the stratified models are due to the rank levels
+data_stra_assi=data_2 %>% 
+  filter(rank=="Assistant")
+data_stra_asso=data_2 %>% 
+  filter(rank=="Associate")
+data_stra_full=data_2 %>% 
+  filter(rank=="Full professor")
+## in assistant level
+model_stra1=lm(log_sal~gender+dept+clin+cert+exper,data=data_stra_assi)
+summary(model_stra1)
+
+model_stra2=lm(log_sal~gender+dept+clin+cert+exper,data=data_stra_asso)
+summary(model_stra2)
+
+model_stra3=lm(log_sal~gender+dept+clin+cert+exper,data=data_stra_full)
+summary(model_stra3)
 ```
 
 
