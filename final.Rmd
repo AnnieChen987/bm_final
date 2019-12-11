@@ -17,21 +17,30 @@ library(tidyverse)
 library(arsenal)
 library(knitr)
 require(survival)
+
+# read dataset
 data_0=read_csv("Lawsuit.csv") %>% 
   janitor::clean_names()
+
+# add variables: total salary and mean salary
 data=data_0 %>% mutate(
   total_sal=sal94+sal95,
   mean_sal=total_sal/2
 ) %>% 
-  select(-sal94,-sal95,-total_sal)
+  # get rid of 94 salary, 95 salary and total salary
+  dplyr::select(-sal94,-sal95,-total_sal)
   
 ```
 
 ```{r}
+
+# descriptive data
+
+
 my_labels2 <- list(dept = "Dept,n%", clin="Clin n%", cert="Cert,n%",prate="Publication rate",exper="Years since obtaining MD",
                    mean_sal="Salary",rank="Rank,n%")
 
- my_controls <- tableby.control(total = T,
+my_controls <- tableby.control(total = T,
   test=T,  
   digits=4,
   numeric.stats = c("meansd", "medianq1q3"),
@@ -40,9 +49,11 @@ my_labels2 <- list(dept = "Dept,n%", clin="Clin n%", cert="Cert,n%",prate="Publi
     meansd ="Mean (SD)",
     medianq1q3 = "Median (Q1, Q3)",
     countpct = "N (%)"))
+ 
 ```
 
 ```{r}
+
 data_1<-data %>% 
   mutate(dept=factor(dept, labels=c("Molecular Biology","Physiology","Genetics","Pediatrics","Medicine","Surgery")),
          gender=factor(gender, labels=c("Female","Male")),
