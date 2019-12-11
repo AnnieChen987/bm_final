@@ -240,8 +240,7 @@ gender_method1=lm(log_sal~gender*clin+gender*exper+dept+cert,data=data_2)
 summary(gender_method1)
 ## but hard to find the stratified model, because the exper is continous variable
 ```
-<<<<<<< HEAD
-=======
+
 
 # methos 2 try confounders in above same way, but find the interaction independtly.
 ```{r}
@@ -290,17 +289,16 @@ summary(model_stra3)
 
 ```
 
-<<<<<<< HEAD
+
 ## try model with two interaction (rank and exper) 
-=======
+
 *delete*
 ## try model with two interaction (rank and exper)
->>>>>>> 66b8ebea67975e2a8cff394091d427efd8fd1bff
+
 ```{r}
 gender_inter_two=lm(log_sal~gender*rank+dept+clin+cert+exper*gender,data=data_2)
 summary(gender_inter_two)
 ```
-<<<<<<< HEAD
 ## too complicated then stop
 
 
@@ -353,13 +351,10 @@ c
 
 
 
-=======
-
-*delete*
-## model with one interaction (exper)
+## model with one interaction (no exper)
 
 ```{r}
 gender_inter_exp=lm(log_sal~ gender * exper +rank + dept + clin+cert,data=data_2)
 summary(gender_inter_exp)
 ```
->>>>>>> 66b8ebea67975e2a8cff394091d427efd8fd1bff
+
