@@ -45,9 +45,9 @@ my_labels2 <- list(dept = "Dept,n%", clin="Clin n%", cert="Cert,n%",prate="Publi
 ```{r}
 data_1<-data %>% 
   mutate(dept=factor(dept, labels=c("Molecular Biology","Physiology","Genetics","Pediatrics","Medicine","Surgery")),
-         gender=factor(gender, labels=c("Male","Female")),
-         clin=factor(clin, labels=c("Primarily clinical emphasis,","Primarily research emphasis")),
-         cert=factor(cert, labels=c("Board certified","not certified")),
+         gender=factor(gender, labels=c("Female","Male")),
+         clin=factor(clin, labels=c("Primarily research emphasis","Primarily clinical emphasis")),
+         cert=factor(cert, labels=c("not certified", "Board certified")),
          rank=factor(rank,label=c("Assistant","Associate","Full professor"))
          )
 ```
@@ -125,4 +125,3 @@ plot_qq(data_2)
 # categorical
 plot_bar(data_2, maxcat = 20, parallel = TRUE)
 ```
-
