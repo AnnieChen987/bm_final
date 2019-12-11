@@ -146,7 +146,15 @@ cert_gen = data_1 %>%
   ggplot(aes(x = cert, y = mean_sal, color = gender)) + 
     geom_boxplot()
 
+exp_gen = data_1 %>%
+  group_by(gender) %>%
+  ggplot(aes(x = exper, y = mean_sal, color = gender)) + 
+    geom_point() +
+  geom_smooth(se = FALSE)
+
 (rank_gen + dept_gen)/(clin_gen + cert_gen)
+
+exp_gen
 ```
 
 
