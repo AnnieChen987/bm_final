@@ -285,7 +285,13 @@ summary(model_stra2)
 
 model_stra3=lm(log_sal~gender+dept+clin+cert+exper,data=data_stra_full)
 summary(model_stra3)
+
 ```
 
 
+## try model with two interaction (rank and exper)
+```{r}
+gender_inter_two=lm(log_sal~gender*rank+dept+clin+cert+exper*gender,data=data_2)
+summary(gender_inter_two)
+```
 >>>>>>> f0aee15ab7d28bb1d75e40f34198f1f2805926f3
