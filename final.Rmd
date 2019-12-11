@@ -122,6 +122,35 @@ plot_qq(data_2)
 plot_bar(data_2, maxcat = 20, parallel = TRUE)
 
 
+# Visualization 
+```{r}
+library(patchwork)
+
+rank_gen = data_1 %>%
+  group_by(gender) %>%
+  ggplot(aes(x = rank, y = mean_sal, color = gender)) + 
+    geom_boxplot() 
+
+dept_gen = data_1 %>%
+  group_by(gender) %>%
+  ggplot(aes(x = dept, y = mean_sal, color = gender)) + 
+    geom_boxplot()
+
+clin_gen = data_1 %>%
+  group_by(gender) %>%
+  ggplot(aes(x = clin, y = mean_sal, color = gender)) + 
+    geom_boxplot()
+
+cert_gen = data_1 %>%
+  group_by(gender) %>%
+  ggplot(aes(x = cert, y = mean_sal, color = gender)) + 
+    geom_boxplot()
+
+(rank_gen + dept_gen)/(clin_gen + cert_gen)
+```
+
+
+
 #method 1, try the interaction along with confounders
 ## try to find confounder
 ## put all variable into model-dept, clin,cert, prate,exper,rank
