@@ -150,7 +150,7 @@ exp_gen = data_1 %>%
   group_by(gender) %>%
   ggplot(aes(x = exper, y = mean_sal, color = gender)) + 
     geom_point() +
-  geom_smooth(se = FALSE)
+  geom_smooth(method="lm",aes(color=gender),se=FALSE)
 
 (rank_gen + dept_gen)/(clin_gen + cert_gen)
 
