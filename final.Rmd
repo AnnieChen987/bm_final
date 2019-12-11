@@ -17,21 +17,30 @@ library(tidyverse)
 library(arsenal)
 library(knitr)
 require(survival)
+
+# read dataset
 data_0=read_csv("Lawsuit.csv") %>% 
   janitor::clean_names()
+
+# add variables: total salary and mean salary
 data=data_0 %>% mutate(
   total_sal=sal94+sal95,
   mean_sal=total_sal/2
 ) %>% 
-  select(-sal94,-sal95,-total_sal)
+  # get rid of 94 salary, 95 salary and total salary
+  dplyr::select(-sal94,-sal95,-total_sal)
   
 ```
 
 ```{r}
+
+# descriptive data
+
+
 my_labels2 <- list(dept = "Dept,n%", clin="Clin n%", cert="Cert,n%",prate="Publication rate",exper="Years since obtaining MD",
                    mean_sal="Salary",rank="Rank,n%")
 
- my_controls <- tableby.control(total = T,
+my_controls <- tableby.control(total = T,
   test=T,  
   digits=4,
   numeric.stats = c("meansd", "medianq1q3"),
@@ -40,9 +49,11 @@ my_labels2 <- list(dept = "Dept,n%", clin="Clin n%", cert="Cert,n%",prate="Publi
     meansd ="Mean (SD)",
     medianq1q3 = "Median (Q1, Q3)",
     countpct = "N (%)"))
+ 
 ```
 
 ```{r}
+
 data_1<-data %>% 
   mutate(dept=factor(dept, labels=c("Molecular Biology","Physiology","Genetics","Pediatrics","Medicine","Surgery")),
          gender=factor(gender, labels=c("Female","Male")),
@@ -158,7 +169,7 @@ exp_gen
 ```
 
 
-
+#*useful*
 #method 1, try the interaction along with confounders
 ## try to find confounder
 ## put all variable into model-dept, clin,cert, prate,exper,rank
@@ -205,7 +216,7 @@ anova(gender_only,mulit_2)
 ## the p is smaller than 0.05
 ```
 
-
+*delete*
 ## try the interaction 
 ```{r}
 gender_inter_dept=lm(log_sal~gender*dept+clin+cert+prate+exper,data=data_2)
@@ -240,8 +251,7 @@ gender_method1=lm(log_sal~gender*clin+gender*exper+dept+cert,data=data_2)
 summary(gender_method1)
 ## but hard to find the stratified model, because the exper is continous variable
 ```
-<<<<<<< HEAD
-=======
+
 
 # methos 2 try confounders in above same way, but find the interaction independtly.
 ```{r}
@@ -268,6 +278,8 @@ gender_method2=lm(log_sal~gender*rank+dept+clin+cert+exper,data=data_2)
 summary(gender_method2)
 ```
 
+
+# strtified by rank 
 ```{r}
 ##  then strtified the rank levels
 data_stra_assi=data_2 %>% 
@@ -289,16 +301,21 @@ summary(model_stra3)
 ```
 
 
+## try model with two interaction (rank and exper) 
+
+*delete*
 ## try model with two interaction (rank and exper)
+
 ```{r}
 gender_inter_two=lm(log_sal~gender*rank+dept+clin+cert+exper*gender,data=data_2)
 summary(gender_inter_two)
 ```
->>>>>>> f0aee15ab7d28bb1d75e40f34198f1f2805926f3
+## too complicated then stop
 
-## model with one interaction (exper)
 
+## so our final model is
 ```{r}
+<<<<<<< HEAD
 gender_inter_exp=lm(log_sal~gender * exper +rank + dept + clin+cert,data=data_2)
 summary(gender_inter_exp)
 ## stratify exp levels:
@@ -316,3 +333,60 @@ summary(gender_inter_exp_3)
 gender_inter_exp_4=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp %>% filter(exper=="large"))
 summary(gender_inter_exp_4)
 ```
+=======
+gender_method2=lm(log_sal~gender*rank+dept+clin+cert+exper,data=data_2)
+summary(gender_method2)
+```
+
+## diaganosis
+```{r}
+par(mfrow = c(2, 2))
+plot(gender_method2)
+```
+## meet the constant varience and normality assumption
+## 184 maybe a potential influential point
+
+## checking outlier and influential
+### outlier in Y
+```{r}
+rstandard(gender_method2)
+```
+Any observation with an absolute studentized residual ri greater than 2.5 is considered an outlier. In this dataset, we think 184 case is an outliers in Y.
+
+
+### outlier in X
+```{r}
+hat=hatvalues(gender_method2)
+hat2=hat %>%
+data.frame()
+hat3=mutate(hat2,
+hii=hat2[,1])
+state_name=rownames(hat2) %>%
+data.frame()
+state_name2= mutate(state_name,
+name=state_name[,1])
+hat_final=cbind(cbind(dplyr::select(state_name2,name),dplyr::select(hat3,hii)))
+hat_final
+hat_final %>%
+filter(hii>0.2)
+```
+## no outlier in X
+
+## influential cases
+```{r}
+c=influence.measures(gender_method2)
+c
+```
+
+## try the model without outlier
+```{r}
+data_no_184=data_2[-184,]
+gender_no_184=lm(log_sal~gender*rank+dept+clin+cert+exper,data=data_no_184)
+summary(gender_no_184)
+```
+## model changed a lot so it is an influential point
+
+
+
+
+>>>>>>> 44a4bd3aeb60622a3aa540168a6a3f7089f3fbf5
