@@ -299,6 +299,6 @@ summary(gender_inter_two)
 ## model with one interaction (exper)
 
 ```{r}
-gender_inter_exp=lm(log_sal~gender * exper +rank + dept + clin+cert,data=data_2)
+gender_inter_exp=lm(log_sal~ gender * exper +rank + dept + clin+cert,data=data_2)
 summary(gender_inter_exp)
 ```
