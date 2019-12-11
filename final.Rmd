@@ -301,16 +301,21 @@ summary(model_stra3)
 ```
 
 
-## try model with two interaction (rank and exper) 
 
-*delete*
 ## try model with two interaction (rank and exper)
 
 ```{r}
 gender_inter_two=lm(log_sal~gender*rank+dept+clin+cert+exper*gender,data=data_2)
 summary(gender_inter_two)
 ```
-## too complicated then stop
+## then the rank isn't sig we will remove the rank
+
+
+## our final model is 
+```{r}
+gender_inter_exp=lm(log_sal~gender * exper +rank + dept + clin+cert,data=data_2)
+summary(gender_inter_exp)
+```
 
 
 ## so our final model is
@@ -334,14 +339,12 @@ gender_inter_exp_4=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp
 summary(gender_inter_exp_4)
 ```
 =======
-gender_method2=lm(log_sal~gender*rank+dept+clin+cert+exper,data=data_2)
-summary(gender_method2)
-```
+
 
 ## diaganosis
 ```{r}
 par(mfrow = c(2, 2))
-plot(gender_method2)
+plot(gender_inter_exp)
 ```
 ## meet the constant varience and normality assumption
 ## 184 maybe a potential influential point
@@ -349,14 +352,14 @@ plot(gender_method2)
 ## checking outlier and influential
 ### outlier in Y
 ```{r}
-rstandard(gender_method2)
+rstandard(gender_inter_exp)
 ```
 Any observation with an absolute studentized residual ri greater than 2.5 is considered an outlier. In this dataset, we think 184 case is an outliers in Y.
 
 
 ### outlier in X
 ```{r}
-hat=hatvalues(gender_method2)
+hat=hatvalues(gender_inter_exp)
 hat2=hat %>%
 data.frame()
 hat3=mutate(hat2,
@@ -374,14 +377,14 @@ filter(hii>0.2)
 
 ## influential cases
 ```{r}
-c=influence.measures(gender_method2)
+c=influence.measures(gender_inter_exp)
 c
 ```
 
 ## try the model without outlier
 ```{r}
 data_no_184=data_2[-184,]
-gender_no_184=lm(log_sal~gender*rank+dept+clin+cert+exper,data=data_no_184)
+gender_no_184=lm(log_sal~gender * exper +rank + dept + clin+cert,data=data_no_184)
 summary(gender_no_184)
 ```
 ## model changed a lot so it is an influential point
