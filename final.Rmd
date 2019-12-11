@@ -1,6 +1,6 @@
 ---
 title: "final"
-author: "Sibei Liu"
+author: "group 11 amazing"
 date: "2019/12/3"
 output: html_document
 editor_options: 
@@ -81,7 +81,7 @@ data_2=data_2 %>%
 seems normal
 
 ```{r}
-# stepwise
+# stepwise can not be used in association model, only in predictive model
 muli1=lm(log_sal~.,data=data_2)
 step(muli1) %>% 
   summary()
@@ -104,19 +104,15 @@ step_null <- lm(log_sal ~1, data = data_2)
 for_model <- step(step_null, scope = list(lower = step_null, upper = full_model), direction = "forward")
 ```
 
-```{r}
-# interaction
-interact_lm=lm(log_sal ~ gender*dept*clin*cert*exper*rank, data=data_2)
-summary(interact_lm)
-```
 
 ```{r}
 # colinearity
 library(rms)
 vif(muli1)
+## build the model then remove correlated prate
 ```
 
-```{r}
+
 # correlation
 pairs(data_2)
 # normality
@@ -124,4 +120,135 @@ library(DataExplorer)
 plot_qq(data_2)
 # categorical
 plot_bar(data_2, maxcat = 20, parallel = TRUE)
+
+
+#method 1, try the interaction along with confounders
+## try to find confounder
+## put all variable into model-dept, clin,cert, prate,exper,rank
+
+```{r}
+gender_only=lm(log_sal~gender,data=data_2)
+## coeffecient of gener is 0.3853
+
+gender_dept=lm(log_sal~gender+dept,data=data_2)
+summary(gender_dept)
+#### coeffecient of gener changed from 0.3853 to  0.20521(>10%)
+## dept is a confounder
+
+gender_clin=lm(log_sal~gender+clin,data=data_2)
+summary(gender_clin)
+#### coeffecient of gener changed from 0.3853 to  0.33718(12.4%)
+## clin is a confounder
+
+gender_cert=lm(log_sal~gender+cert,data=data_2)
+summary(gender_cert)
+#### coeffecient of gener changed from 0.3853 to  0.33285(13.6%)
+## cert is a confounder
+
+gender_prate=lm(log_sal~gender+prate,data=data_2)
+summary(gender_prate)
+#### coeffecient of gener changed from 0.3853 to  0.251814(>10%)
+## prate is a confouder
+
+gender_exper=lm(log_sal~gender+exper,data=data_2)
+summary(gender_exper)
+#### coeffecient of gener changed from 0.3853 to  0.30755(>10%)
+## exper is a confounder
+
+gender_rank=lm(log_sal~gender+rank,data=data_2)
+summary(gender_rank)
+#### coeffecient of gener changed from 0.3853 to  0.349481(<10%)
+## rank is not a confounder
+
+mulit_2=lm(log_sal~gender+dept+clin+cert+prate+exper,data=data_2)
+summary(mulit_2)
+## with very high adjR^2 in mulit_2
+
+anova(gender_only,mulit_2)
+## the p is smaller than 0.05
 ```
+
+
+## try the interaction 
+```{r}
+gender_inter_dept=lm(log_sal~gender*dept+clin+cert+prate+exper,data=data_2)
+summary(gender_inter_dept)
+## the interacton term are not sig
+
+gender_inter_clin=lm(log_sal~gender*clin+dept+cert+prate+exper,data=data_2)
+summary(gender_inter_clin)
+## the interacton term is sig
+
+gender_inter_cert=lm(log_sal~gender*cert+clin+dept+prate+exper,data=data_2)
+summary(gender_inter_cert)
+## the interacton term isn't sig
+
+gender_inter_prate=lm(log_sal~gender*prate+clin+dept+cert+exper,data=data_2)
+summary(gender_inter_prate)
+## the interacton term isn't sig
+
+gender_inter_exper=lm(log_sal~gender*exper+clin+dept+cert+prate,data=data_2)
+summary(gender_inter_exper)
+## the interacton term is sig
+
+
+gender_inter=lm(log_sal~gender*clin+gender*exper+dept+cert+prate,data=data_2)
+summary(gender_inter)
+
+## check the vif
+vif(gender_inter)
+## remove prate
+##then the model is
+gender_method1=lm(log_sal~gender*clin+gender*exper+dept+cert,data=data_2)
+summary(gender_method1)
+## but hard to find the stratified model, because the exper is continous variable
+```
+<<<<<<< HEAD
+=======
+
+# methos 2 try confounders in above same way, but find the interaction independtly.
+```{r}
+gender_inter1=lm(log_sal~gender*dept,data=data_2)
+summary(gender_inter1)
+## interaction term  non-sig
+gender_inter2=lm(log_sal~gender*clin,data=data_2)
+summary(gender_inter2)
+## interaction term  non-sig
+gender_inter3=lm(log_sal~gender*cert,data=data_2)
+summary(gender_inter3)
+## interaction term  non-sig
+gender_inter4=lm(log_sal~gender*prate,data=data_2)
+summary(gender_inter4)
+## interaction term  non-sig
+gender_inter5=lm(log_sal~gender*exper,data=data_2)
+summary(gender_inter5)
+## interaction term  non-sig
+gender_inter6=lm(log_sal~gender*rank,data=data_2)
+summary(gender_inter6)
+## interaction term sig
+
+gender_method2=lm(log_sal~gender*rank+dept+clin+cert+exper,data=data_2)
+summary(gender_method2)
+```
+
+```{r}
+##  then strtified the rank levels
+data_stra_assi=data_2 %>% 
+  filter(rank=="Assistant")
+data_stra_asso=data_2 %>% 
+  filter(rank=="Associate")
+data_stra_full=data_2 %>% 
+  filter(rank=="Full professor")
+## in assistant level
+model_stra1=lm(log_sal~gender+dept+clin+cert+exper,data=data_stra_assi)
+summary(model_stra1)
+
+model_stra2=lm(log_sal~gender+dept+clin+cert+exper,data=data_stra_asso)
+summary(model_stra2)
+
+model_stra3=lm(log_sal~gender+dept+clin+cert+exper,data=data_stra_full)
+summary(model_stra3)
+```
+
+
+>>>>>>> f0aee15ab7d28bb1d75e40f34198f1f2805926f3
