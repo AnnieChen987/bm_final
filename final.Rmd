@@ -220,35 +220,39 @@ anova(gender_only,mulit_2)
 *delete*
 ## try the interaction 
 ```{r}
-gender_inter_dept=lm(log_sal~gender*dept+clin+cert+prate+exper,data=data_2)
+gender_inter_dept=lm(log_sal~gender*dept+clin+cert+prate+exper+ rank,data=data_2)
 summary(gender_inter_dept)
 ## the interacton term are not sig
 
-gender_inter_clin=lm(log_sal~gender*clin+dept+cert+prate+exper,data=data_2)
+gender_inter_clin=lm(log_sal~gender*clin+dept+cert+prate+exper+ rank,data=data_2)
 summary(gender_inter_clin)
-## the interacton term is sig
+## the interacton term isn't sig
 
-gender_inter_cert=lm(log_sal~gender*cert+clin+dept+prate+exper,data=data_2)
+gender_inter_cert=lm(log_sal~gender*cert+clin+dept+prate+exper+ rank,data=data_2)
 summary(gender_inter_cert)
 ## the interacton term isn't sig
 
-gender_inter_prate=lm(log_sal~gender*prate+clin+dept+cert+exper,data=data_2)
+gender_inter_prate=lm(log_sal~gender*prate+clin+dept+cert+exper+ rank,data=data_2)
 summary(gender_inter_prate)
 ## the interacton term isn't sig
 
-gender_inter_exper=lm(log_sal~gender*exper+clin+dept+cert+prate,data=data_2)
+gender_inter_exper=lm(log_sal~gender*exper+clin+dept+cert+prate+ rank,data=data_2)
 summary(gender_inter_exper)
 ## the interacton term is sig
 
+gender_inter_exper=lm(log_sal~gender*rank+clin+dept+cert+prate+ exper,data=data_2)
+summary(gender_inter_exper)
+## the interacton term is sig
 
-gender_inter=lm(log_sal~gender*clin+gender*exper+dept+cert+prate,data=data_2)
+gender_inter=lm(log_sal~gender*rank+gender*exper+clin +dept+cert+prate,data=data_2)
 summary(gender_inter)
+## the interaction terms aren't sig
 
 ## check the vif
 vif(gender_inter)
 ## remove prate
 ##then the model is
-gender_method1=lm(log_sal~gender*clin+gender*exper+dept+cert,data=data_2)
+gender_method1=lm(log_sal~gender*rank+gender*exper+clin+ dept+cert,data=data_2)
 summary(gender_method1)
 ## but hard to find the stratified model, because the exper is continous variable
 ```
@@ -383,8 +387,3 @@ gender_no_184=lm(log_sal~gender * exper +rank + dept + clin+cert,data=data_no_18
 summary(gender_no_184)
 ```
 ## model changed a lot so it is an influential point
-
-
-
-
->>>>>>> 44a4bd3aeb60622a3aa540168a6a3f7089f3fbf5

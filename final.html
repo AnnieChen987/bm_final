@@ -1077,307 +1077,327 @@ anova(gender_only,mulit_2)</code></pre>
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
 <pre class="r"><code>## the p is smaller than 0.05</code></pre>
 <p><em>delete</em> ## try the interaction</p>
-<pre class="r"><code>gender_inter_dept=lm(log_sal~gender*dept+clin+cert+prate+exper,data=data_2)
+<pre class="r"><code>gender_inter_dept=lm(log_sal~gender*dept+clin+cert+prate+exper+ rank,data=data_2)
 summary(gender_inter_dept)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = log_sal ~ gender * dept + clin + cert + prate + 
-##     exper, data = data_2)
+##     exper + rank, data = data_2)
 ## 
 ## Residuals:
-##      Min       1Q   Median       3Q      Max 
-## -0.35920 -0.09378 -0.00067  0.09535  0.84933 
+##     Min      1Q  Median      3Q     Max 
+## -0.3259 -0.0778 -0.0088  0.0713  0.8978 
 ## 
 ## Coefficients:
-##                                   Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                     11.2470659  0.1559256  72.131  &lt; 2e-16 ***
-## genderMale                       0.0497419  0.0449606   1.106 0.269662    
-## deptPhysiology                  -0.1858288  0.0487074  -3.815 0.000172 ***
-## deptGenetics                     0.1477582  0.0589750   2.505 0.012880 *  
-## deptPediatrics                   0.1151270  0.0694615   1.657 0.098714 .  
-## deptMedicine                     0.4569363  0.0628799   7.267 4.90e-12 ***
-## deptSurgery                      0.8416049  0.0991598   8.487 2.04e-15 ***
-## clinPrimarily clinical emphasis  0.1387666  0.0467234   2.970 0.003274 ** 
-## certBoard certified              0.1817851  0.0242793   7.487 1.27e-12 ***
-## prate                           -0.0344432  0.0199045  -1.730 0.084814 .  
-## exper                            0.0268060  0.0017023  15.747  &lt; 2e-16 ***
-## genderMale:deptPhysiology        0.0480538  0.0654317   0.734 0.463400    
-## genderMale:deptGenetics          0.0218729  0.0815209   0.268 0.788687    
-## genderMale:deptPediatrics        0.0060784  0.0734421   0.083 0.934107    
-## genderMale:deptMedicine         -0.0008084  0.0562174  -0.014 0.988539    
-## genderMale:deptSurgery          -0.0389351  0.0849002  -0.459 0.646929    
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     11.157791   0.138442  80.595  &lt; 2e-16 ***
+## genderMale                      -0.021320   0.040614  -0.525   0.6001    
+## deptPhysiology                  -0.218822   0.043206  -5.065 8.10e-07 ***
+## deptGenetics                     0.128699   0.052151   2.468   0.0143 *  
+## deptPediatrics                   0.131783   0.061393   2.147   0.0328 *  
+## deptMedicine                     0.482465   0.055669   8.667 6.37e-16 ***
+## deptSurgery                      0.845486   0.087598   9.652  &lt; 2e-16 ***
+## clinPrimarily clinical emphasis  0.165678   0.041437   3.998 8.47e-05 ***
+## certBoard certified              0.187176   0.021609   8.662 6.59e-16 ***
+## prate                           -0.020417   0.017667  -1.156   0.2490    
+## exper                            0.017817   0.001845   9.658  &lt; 2e-16 ***
+## rankAssociate                    0.134980   0.023885   5.651 4.45e-08 ***
+## rankFull professor               0.223163   0.026775   8.335 5.77e-15 ***
+## genderMale:deptPhysiology        0.079240   0.057920   1.368   0.1725    
+## genderMale:deptGenetics          0.077432   0.072316   1.071   0.2853    
+## genderMale:deptPediatrics        0.048485   0.065323   0.742   0.4587    
+## genderMale:deptMedicine          0.031969   0.049919   0.640   0.5225    
+## genderMale:deptSurgery           0.050029   0.075746   0.660   0.5096    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 0.152 on 245 degrees of freedom
-## Multiple R-squared:  0.9159, Adjusted R-squared:  0.9108 
-## F-statistic:   178 on 15 and 245 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.1343 on 243 degrees of freedom
+## Multiple R-squared:  0.9349, Adjusted R-squared:  0.9304 
+## F-statistic: 205.4 on 17 and 243 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>## the interacton term are not sig
 
-gender_inter_clin=lm(log_sal~gender*clin+dept+cert+prate+exper,data=data_2)
+gender_inter_clin=lm(log_sal~gender*clin+dept+cert+prate+exper+ rank,data=data_2)
 summary(gender_inter_clin)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = log_sal ~ gender * clin + dept + cert + prate + 
-##     exper, data = data_2)
+##     exper + rank, data = data_2)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.36585 -0.09076 -0.00205  0.08984  0.82352 
+## -0.33625 -0.07777 -0.01200  0.07569  0.88875 
 ## 
 ## Coefficients:
 ##                                             Estimate Std. Error t value
-## (Intercept)                                11.169016   0.152240  73.364
-## genderMale                                  0.118876   0.032298   3.681
-## clinPrimarily clinical emphasis             0.201542   0.051765   3.893
-## deptPhysiology                             -0.157601   0.032453  -4.856
-## deptGenetics                                0.180065   0.044005   4.092
-## deptPediatrics                              0.125647   0.059709   2.104
-## deptMedicine                                0.469086   0.050559   9.278
-## deptSurgery                                 0.833162   0.069189  12.042
-## certBoard certified                         0.191366   0.023622   8.101
-## prate                                      -0.030149   0.019390  -1.555
-## exper                                       0.026741   0.001667  16.041
-## genderMale:clinPrimarily clinical emphasis -0.104638   0.040011  -2.615
+## (Intercept)                                11.119845   0.136771  81.303
+## genderMale                                  0.040400   0.030581   1.321
+## clinPrimarily clinical emphasis             0.184370   0.046479   3.967
+## deptPhysiology                             -0.173971   0.029150  -5.968
+## deptGenetics                                0.175789   0.039436   4.458
+## deptPediatrics                              0.154932   0.053683   2.886
+## deptMedicine                                0.499812   0.045464  10.993
+## deptSurgery                                 0.878591   0.062256  14.113
+## certBoard certified                         0.192764   0.021349   9.029
+## prate                                      -0.020595   0.017418  -1.182
+## exper                                       0.018224   0.001839   9.908
+## rankAssociate                               0.129219   0.023875   5.412
+## rankFull professor                          0.213424   0.027132   7.866
+## genderMale:clinPrimarily clinical emphasis -0.033620   0.036953  -0.910
 ##                                            Pr(&gt;|t|)    
 ## (Intercept)                                 &lt; 2e-16 ***
-## genderMale                                 0.000285 ***
-## clinPrimarily clinical emphasis            0.000127 ***
-## deptPhysiology                             2.11e-06 ***
-## deptGenetics                               5.78e-05 ***
-## deptPediatrics                             0.036353 *  
+## genderMale                                  0.18770    
+## clinPrimarily clinical emphasis            9.55e-05 ***
+## deptPhysiology                             8.28e-09 ***
+## deptGenetics                               1.26e-05 ***
+## deptPediatrics                              0.00425 ** 
 ## deptMedicine                                &lt; 2e-16 ***
 ## deptSurgery                                 &lt; 2e-16 ***
-## certBoard certified                        2.45e-14 ***
-## prate                                      0.121244    
+## certBoard certified                         &lt; 2e-16 ***
+## prate                                       0.23818    
 ## exper                                       &lt; 2e-16 ***
-## genderMale:clinPrimarily clinical emphasis 0.009461 ** 
+## rankAssociate                              1.47e-07 ***
+## rankFull professor                         1.14e-13 ***
+## genderMale:clinPrimarily clinical emphasis  0.36381    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 0.1491 on 249 degrees of freedom
-## Multiple R-squared:  0.9178, Adjusted R-squared:  0.9141 
-## F-statistic: 252.7 on 11 and 249 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>## the interacton term is sig
+## Residual standard error: 0.1336 on 247 degrees of freedom
+## Multiple R-squared:  0.9345, Adjusted R-squared:  0.9311 
+## F-statistic: 271.2 on 13 and 247 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>## the interacton term isn't sig
 
-gender_inter_cert=lm(log_sal~gender*cert+clin+dept+prate+exper,data=data_2)
+gender_inter_cert=lm(log_sal~gender*cert+clin+dept+prate+exper+ rank,data=data_2)
 summary(gender_inter_cert)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = log_sal ~ gender * cert + clin + dept + prate + 
-##     exper, data = data_2)
+##     exper + rank, data = data_2)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.37648 -0.09855 -0.00176  0.09325  0.84890 
+## -0.33293 -0.07937 -0.00803  0.07820  0.89450 
 ## 
 ## Coefficients:
-##                                  Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                     11.241685   0.152761  73.590  &lt; 2e-16 ***
-## genderMale                       0.058530   0.037646   1.555 0.121279    
-## certBoard certified              0.186280   0.033944   5.488 1.00e-07 ***
-## clinPrimarily clinical emphasis  0.138424   0.046488   2.978 0.003191 ** 
-## deptPhysiology                  -0.161096   0.032971  -4.886 1.84e-06 ***
-## deptGenetics                     0.159587   0.044139   3.616 0.000363 ***
-## deptPediatrics                   0.117015   0.060559   1.932 0.054462 .  
-## deptMedicine                     0.454589   0.050953   8.922  &lt; 2e-16 ***
-## deptSurgery                      0.803206   0.069181  11.610  &lt; 2e-16 ***
-## prate                           -0.034749   0.019573  -1.775 0.077068 .  
-## exper                            0.026868   0.001689  15.906  &lt; 2e-16 ***
-## genderMale:certBoard certified  -0.002153   0.043583  -0.049 0.960645    
+##                                 Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     11.13540    0.13593  81.921  &lt; 2e-16 ***
+## genderMale                       0.02885    0.03377   0.854  0.39373    
+## certBoard certified              0.19819    0.03008   6.588 2.66e-10 ***
+## clinPrimarily clinical emphasis  0.16563    0.04130   4.010 8.04e-05 ***
+## deptPhysiology                  -0.17473    0.02923  -5.977 7.89e-09 ***
+## deptGenetics                     0.17087    0.03909   4.371 1.83e-05 ***
+## deptPediatrics                   0.15220    0.05381   2.828  0.00506 ** 
+## deptMedicine                     0.49603    0.04537  10.933  &lt; 2e-16 ***
+## deptSurgery                      0.87140    0.06177  14.106  &lt; 2e-16 ***
+## prate                           -0.02168    0.01740  -1.246  0.21393    
+## exper                            0.01800    0.00183   9.836  &lt; 2e-16 ***
+## rankAssociate                    0.13196    0.02369   5.571 6.60e-08 ***
+## rankFull professor               0.21986    0.02640   8.329 5.65e-15 ***
+## genderMale:certBoard certified  -0.01340    0.03887  -0.345  0.73057    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 0.1511 on 249 degrees of freedom
-## Multiple R-squared:  0.9155, Adjusted R-squared:  0.9118 
-## F-statistic: 245.3 on 11 and 249 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.1338 on 247 degrees of freedom
+## Multiple R-squared:  0.9343, Adjusted R-squared:  0.9309 
+## F-statistic: 270.3 on 13 and 247 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>## the interacton term isn't sig
 
-gender_inter_prate=lm(log_sal~gender*prate+clin+dept+cert+exper,data=data_2)
+gender_inter_prate=lm(log_sal~gender*prate+clin+dept+cert+exper+ rank,data=data_2)
 summary(gender_inter_prate)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = log_sal ~ gender * prate + clin + dept + cert + 
-##     exper, data = data_2)
+##     exper + rank, data = data_2)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.35823 -0.09750 -0.00469  0.09280  0.84528 
+## -0.33186 -0.07950 -0.01236  0.07737  0.89661 
 ## 
 ## Coefficients:
 ##                                  Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                     11.287118   0.152517  74.006  &lt; 2e-16 ***
-## genderMale                      -0.043903   0.058694  -0.748 0.455170    
-## prate                           -0.044012   0.020068  -2.193 0.029220 *  
-## clinPrimarily clinical emphasis  0.138801   0.046072   3.013 0.002856 ** 
-## deptPhysiology                  -0.157786   0.032692  -4.826 2.43e-06 ***
-## deptGenetics                     0.171042   0.044028   3.885 0.000131 ***
-## deptPediatrics                   0.117668   0.060021   1.960 0.051058 .  
-## deptMedicine                     0.462691   0.050778   9.112  &lt; 2e-16 ***
-## deptSurgery                      0.826969   0.069876  11.835  &lt; 2e-16 ***
-## certBoard certified              0.185829   0.023660   7.854 1.20e-13 ***
-## exper                            0.026716   0.001679  15.907  &lt; 2e-16 ***
-## genderMale:prate                 0.019619   0.010565   1.857 0.064504 .  
+## (Intercept)                     11.155492   0.136947  81.459  &lt; 2e-16 ***
+## genderMale                      -0.010718   0.052582  -0.204  0.83865    
+## prate                           -0.024706   0.018032  -1.370  0.17189    
+## clinPrimarily clinical emphasis  0.164599   0.041196   3.995 8.53e-05 ***
+## deptPhysiology                  -0.174286   0.029193  -5.970 8.20e-09 ***
+## deptGenetics                     0.172838   0.039230   4.406 1.57e-05 ***
+## deptPediatrics                   0.152808   0.053703   2.845  0.00481 ** 
+## deptMedicine                     0.498191   0.045442  10.963  &lt; 2e-16 ***
+## deptSurgery                      0.877120   0.062549  14.023  &lt; 2e-16 ***
+## certBoard certified              0.191105   0.021268   8.986  &lt; 2e-16 ***
+## exper                            0.018099   0.001832   9.881  &lt; 2e-16 ***
+## rankAssociate                    0.131378   0.023691   5.546 7.52e-08 ***
+## rankFull professor               0.216370   0.026793   8.076 2.96e-14 ***
+## genderMale:prate                 0.005970   0.009575   0.623  0.53357    
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 0.1501 on 249 degrees of freedom
-## Multiple R-squared:  0.9167, Adjusted R-squared:  0.913 
-## F-statistic:   249 on 11 and 249 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.1337 on 247 degrees of freedom
+## Multiple R-squared:  0.9344, Adjusted R-squared:  0.931 
+## F-statistic: 270.7 on 13 and 247 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>## the interacton term isn't sig
 
-gender_inter_exper=lm(log_sal~gender*exper+clin+dept+cert+prate,data=data_2)
+gender_inter_exper=lm(log_sal~gender*exper+clin+dept+cert+prate+ rank,data=data_2)
 summary(gender_inter_exper)</code></pre>
 <pre><code>## 
 ## Call:
 ## lm(formula = log_sal ~ gender * exper + clin + dept + cert + 
-##     prate, data = data_2)
+##     prate + rank, data = data_2)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.37091 -0.09348  0.00239  0.08838  0.80853 
+## -0.30580 -0.07941 -0.01137  0.07299  0.86320 
 ## 
 ## Coefficients:
 ##                                  Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)                     11.130526   0.148640  74.882  &lt; 2e-16 ***
-## genderMale                       0.199221   0.039477   5.047 8.69e-07 ***
-## exper                            0.040306   0.003527  11.429  &lt; 2e-16 ***
-## clinPrimarily clinical emphasis  0.140220   0.044762   3.133  0.00194 ** 
-## deptPhysiology                  -0.147474   0.031872  -4.627 5.97e-06 ***
-## deptGenetics                     0.165499   0.042360   3.907  0.00012 ***
-## deptPediatrics                   0.139460   0.058542   2.382  0.01796 *  
-## deptMedicine                     0.467976   0.049250   9.502  &lt; 2e-16 ***
-## deptSurgery                      0.816264   0.066801  12.219  &lt; 2e-16 ***
-## certBoard certified              0.176478   0.023071   7.649 4.41e-13 ***
-## prate                           -0.033975   0.018886  -1.799  0.07324 .  
-## genderMale:exper                -0.016686   0.003884  -4.296 2.50e-05 ***
+## (Intercept)                     11.072092   0.133802  82.750  &lt; 2e-16 ***
+## genderMale                       0.122935   0.037145   3.310  0.00107 ** 
+## exper                            0.028118   0.003550   7.921 8.03e-14 ***
+## clinPrimarily clinical emphasis  0.163520   0.040354   4.052 6.80e-05 ***
+## deptPhysiology                  -0.164796   0.028715  -5.739 2.78e-08 ***
+## deptGenetics                     0.172813   0.038058   4.541 8.77e-06 ***
+## deptPediatrics                   0.167354   0.052773   3.171  0.00171 ** 
+## deptMedicine                     0.502766   0.044455  11.310  &lt; 2e-16 ***
+## deptSurgery                      0.875297   0.060466  14.476  &lt; 2e-16 ***
+## certBoard certified              0.183270   0.020956   8.746 3.50e-16 ***
+## prate                           -0.022248   0.017033  -1.306  0.19271    
+## rankAssociate                    0.115944   0.023679   4.896 1.76e-06 ***
+## rankFull professor               0.205102   0.026172   7.837 1.38e-13 ***
+## genderMale:exper                -0.011771   0.003575  -3.292  0.00114 ** 
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 0.1458 on 249 degrees of freedom
-## Multiple R-squared:  0.9213, Adjusted R-squared:  0.9179 
-## F-statistic: 265.2 on 11 and 249 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.131 on 247 degrees of freedom
+## Multiple R-squared:  0.9371, Adjusted R-squared:  0.9337 
+## F-statistic: 282.9 on 13 and 247 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>## the interacton term is sig
 
+gender_inter_exper=lm(log_sal~gender*rank+clin+dept+cert+prate+ exper,data=data_2)
+summary(gender_inter_exper)</code></pre>
+<pre><code>## 
+## Call:
+## lm(formula = log_sal ~ gender * rank + clin + dept + cert + prate + 
+##     exper, data = data_2)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.32219 -0.08251 -0.00906  0.08077  0.86063 
+## 
+## Coefficients:
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     11.131259   0.133614  83.309  &lt; 2e-16 ***
+## genderMale                       0.068480   0.027902   2.454 0.014811 *  
+## rankAssociate                    0.171038   0.033892   5.047 8.75e-07 ***
+## rankFull professor               0.280240   0.039566   7.083 1.48e-11 ***
+## clinPrimarily clinical emphasis  0.151433   0.041126   3.682 0.000284 ***
+## deptPhysiology                  -0.175306   0.028829  -6.081 4.54e-09 ***
+## deptGenetics                     0.167293   0.038464   4.349 2.00e-05 ***
+## deptPediatrics                   0.156260   0.053227   2.936 0.003642 ** 
+## deptMedicine                     0.498391   0.044942  11.090  &lt; 2e-16 ***
+## deptSurgery                      0.865618   0.061147  14.156  &lt; 2e-16 ***
+## certBoard certified              0.192429   0.021351   9.013  &lt; 2e-16 ***
+## prate                           -0.022651   0.017216  -1.316 0.189496    
+## exper                            0.018489   0.001819  10.164  &lt; 2e-16 ***
+## genderMale:rankAssociate        -0.083444   0.044685  -1.867 0.063039 .  
+## genderMale:rankFull professor   -0.106694   0.046598  -2.290 0.022887 *  
+## ---
+## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+## 
+## Residual standard error: 0.1323 on 246 degrees of freedom
+## Multiple R-squared:  0.936,  Adjusted R-squared:  0.9324 
+## F-statistic:   257 on 14 and 246 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>## the interacton term is sig
 
-gender_inter=lm(log_sal~gender*clin+gender*exper+dept+cert+prate,data=data_2)
+gender_inter=lm(log_sal~gender*rank+gender*exper+clin +dept+cert+prate,data=data_2)
 summary(gender_inter)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = log_sal ~ gender * clin + gender * exper + dept + 
-##     cert + prate, data = data_2)
+## lm(formula = log_sal ~ gender * rank + gender * exper + clin + 
+##     dept + cert + prate, data = data_2)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.35608 -0.08178 -0.00329  0.09376  0.77519 
+## -0.29969 -0.07748 -0.00962  0.07190  0.85375 
 ## 
 ## Coefficients:
-##                                             Estimate Std. Error t value
-## (Intercept)                                11.036303   0.149002  74.068
-## genderMale                                  0.281887   0.046726   6.033
-## clinPrimarily clinical emphasis             0.214426   0.049809   4.305
-## exper                                       0.041125   0.003474  11.838
-## deptPhysiology                             -0.142237   0.031352  -4.537
-## deptGenetics                                0.190195   0.042332   4.493
-## deptPediatrics                              0.150948   0.057620   2.620
-## deptMedicine                                0.485847   0.048706   9.975
-## deptSurgery                                 0.852380   0.066600  12.799
-## certBoard certified                         0.183209   0.022762   8.049
-## prate                                      -0.028525   0.018632  -1.531
-## genderMale:clinPrimarily clinical emphasis -0.122497   0.038630  -3.171
-## genderMale:exper                           -0.017890   0.003834  -4.666
-##                                            Pr(&gt;|t|)    
-## (Intercept)                                 &lt; 2e-16 ***
-## genderMale                                 5.83e-09 ***
-## clinPrimarily clinical emphasis            2.41e-05 ***
-## exper                                       &lt; 2e-16 ***
-## deptPhysiology                             8.90e-06 ***
-## deptGenetics                               1.08e-05 ***
-## deptPediatrics                              0.00934 ** 
-## deptMedicine                                &lt; 2e-16 ***
-## deptSurgery                                 &lt; 2e-16 ***
-## certBoard certified                        3.47e-14 ***
-## prate                                       0.12705    
-## genderMale:clinPrimarily clinical emphasis  0.00171 ** 
-## genderMale:exper                           5.03e-06 ***
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     11.076077   0.134895  82.109  &lt; 2e-16 ***
+## genderMale                       0.127229   0.038362   3.317 0.001050 ** 
+## rankAssociate                    0.139558   0.036514   3.822 0.000168 ***
+## rankFull professor               0.215290   0.049021   4.392 1.67e-05 ***
+## exper                            0.027125   0.004301   6.307 1.32e-09 ***
+## clinPrimarily clinical emphasis  0.160395   0.041005   3.912 0.000119 ***
+## deptPhysiology                  -0.165861   0.028921  -5.735 2.86e-08 ***
+## deptGenetics                     0.171288   0.038206   4.483 1.13e-05 ***
+## deptPediatrics                   0.168012   0.053077   3.165 0.001744 ** 
+## deptMedicine                     0.503851   0.044659  11.282  &lt; 2e-16 ***
+## deptSurgery                      0.874264   0.060794  14.381  &lt; 2e-16 ***
+## certBoard certified              0.182722   0.021634   8.446 2.68e-15 ***
+## prate                           -0.022370   0.017082  -1.310 0.191555    
+## genderMale:rankAssociate        -0.040956   0.048317  -0.848 0.397454    
+## genderMale:rankFull professor   -0.020663   0.060414  -0.342 0.732626    
+## genderMale:exper                -0.010425   0.004712  -2.212 0.027871 *  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 0.1432 on 248 degrees of freedom
-## Multiple R-squared:  0.9244, Adjusted R-squared:  0.9208 
-## F-statistic: 252.7 on 12 and 248 DF,  p-value: &lt; 2.2e-16</code></pre>
-<pre class="r"><code>## check the vif
+## Residual standard error: 0.1313 on 245 degrees of freedom
+## Multiple R-squared:  0.9372, Adjusted R-squared:  0.9334 
+## F-statistic:   244 on 15 and 245 DF,  p-value: &lt; 2.2e-16</code></pre>
+<pre class="r"><code>## the interaction terms aren't sig
+
+## check the vif
 vif(gender_inter)</code></pre>
-<pre><code>##                                 genderMale 
-##                                   6.698584 
-##            clinPrimarily clinical emphasis 
-##                                   7.486527 
-##                                      exper 
-##                                   5.930108 
-##                             deptPhysiology 
-##                                   1.622535 
-##                               deptGenetics 
-##                                   1.686557 
-##                             deptPediatrics 
-##                                   4.296365 
-##                               deptMedicine 
-##                                   6.414379 
-##                                deptSurgery 
-##                                   7.321892 
-##                        certBoard certified 
-##                                   1.327739 
-##                                      prate 
-##                                  16.631118 
-## genderMale:clinPrimarily clinical emphasis 
-##                                   4.486442 
-##                           genderMale:exper 
-##                                  11.565565</code></pre>
+<pre><code>##                      genderMale                   rankAssociate 
+##                        5.373027                        3.735443 
+##              rankFull professor                           exper 
+##                        7.988699                       10.816110 
+## clinPrimarily clinical emphasis                  deptPhysiology 
+##                        6.038165                        1.643075 
+##                    deptGenetics                  deptPediatrics 
+##                        1.634834                        4.338371 
+##                    deptMedicine                     deptSurgery 
+##                        6.417500                        7.260459 
+##             certBoard certified                           prate 
+##                        1.427343                       16.635935 
+##        genderMale:rankAssociate   genderMale:rankFull professor 
+##                        4.863054                       10.744979 
+##                genderMale:exper 
+##                       20.789975</code></pre>
 <pre class="r"><code>## remove prate
 ##then the model is
-gender_method1=lm(log_sal~gender*clin+gender*exper+dept+cert,data=data_2)
+gender_method1=lm(log_sal~gender*rank+gender*exper+clin+ dept+cert,data=data_2)
 summary(gender_method1)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = log_sal ~ gender * clin + gender * exper + dept + 
-##     cert, data = data_2)
+## lm(formula = log_sal ~ gender * rank + gender * exper + clin + 
+##     dept + cert, data = data_2)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.35192 -0.09065 -0.00500  0.08881  0.77991 
+## -0.31795 -0.07929 -0.01275  0.07078  0.85987 
 ## 
 ## Coefficients:
-##                                             Estimate Std. Error t value
-## (Intercept)                                10.817076   0.041309 261.857
-## genderMale                                  0.294900   0.046070   6.401
-## clinPrimarily clinical emphasis             0.274459   0.030797   8.912
-## exper                                       0.040964   0.003482  11.765
-## deptPhysiology                             -0.142009   0.031436  -4.517
-## deptGenetics                                0.212877   0.039762   5.354
-## deptPediatrics                              0.216747   0.038482   5.632
-## deptMedicine                                0.542406   0.031826  17.043
-## deptSurgery                                 0.935610   0.038576  24.253
-## certBoard certified                         0.181843   0.022805   7.974
-## genderMale:clinPrimarily clinical emphasis -0.127953   0.038569  -3.318
-## genderMale:exper                           -0.018000   0.003844  -4.683
-##                                            Pr(&gt;|t|)    
-## (Intercept)                                 &lt; 2e-16 ***
-## genderMale                                 7.61e-10 ***
-## clinPrimarily clinical emphasis             &lt; 2e-16 ***
-## exper                                       &lt; 2e-16 ***
-## deptPhysiology                             9.67e-06 ***
-## deptGenetics                               1.96e-07 ***
-## deptPediatrics                             4.79e-08 ***
-## deptMedicine                                &lt; 2e-16 ***
-## deptSurgery                                 &lt; 2e-16 ***
-## certBoard certified                        5.58e-14 ***
-## genderMale:clinPrimarily clinical emphasis  0.00104 ** 
-## genderMale:exper                           4.65e-06 ***
+##                                  Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                     10.906051   0.036673 297.390  &lt; 2e-16 ***
+## genderMale                       0.133412   0.038125   3.499 0.000554 ***
+## rankAssociate                    0.141497   0.036537   3.873 0.000138 ***
+## rankFull professor               0.217020   0.049074   4.422 1.47e-05 ***
+## exper                            0.026849   0.004302   6.241 1.89e-09 ***
+## clinPrimarily clinical emphasis  0.205465   0.022327   9.203  &lt; 2e-16 ***
+## deptPhysiology                  -0.166053   0.028962  -5.733 2.87e-08 ***
+## deptGenetics                     0.188370   0.035963   5.238 3.49e-07 ***
+## deptPediatrics                   0.219621   0.035606   6.168 2.82e-09 ***
+## deptMedicine                     0.548131   0.029218  18.760  &lt; 2e-16 ***
+## deptSurgery                      0.939254   0.035170  26.706  &lt; 2e-16 ***
+## certBoard certified              0.181479   0.021644   8.385 3.97e-15 ***
+## genderMale:rankAssociate        -0.040275   0.048384  -0.832 0.405994    
+## genderMale:rankFull professor   -0.018879   0.060486  -0.312 0.755215    
+## genderMale:exper                -0.010471   0.004719  -2.219 0.027410 *  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
-## Residual standard error: 0.1436 on 249 degrees of freedom
-## Multiple R-squared:  0.9237, Adjusted R-squared:  0.9203 
-## F-statistic:   274 on 11 and 249 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.1315 on 246 degrees of freedom
+## Multiple R-squared:  0.9368, Adjusted R-squared:  0.9332 
+## F-statistic: 260.5 on 14 and 246 DF,  p-value: &lt; 2.2e-16</code></pre>
 <pre class="r"><code>## but hard to find the stratified model, because the exper is continous variable</code></pre>
 </div>
 <div id="methos-2-try-confounders-in-above-same-way-but-find-the-interaction-independtly." class="section level1">
@@ -3127,21 +3147,6 @@ summary(gender_no_184)</code></pre>
 </div>
 <div id="model-changed-a-lot-so-it-is-an-influential-point" class="section level2">
 <h2>model changed a lot so it is an influential point</h2>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>44a4bd3aeb60622a3aa540168a6a3f7089f3fbf5</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
 </div>
 </div>
 
