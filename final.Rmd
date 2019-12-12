@@ -123,7 +123,7 @@ vif(muli1)
 ## build the model then remove correlated prate
 ```
 
-
+```{r}
 # correlation
 pairs(data_2)
 # normality
@@ -131,6 +131,7 @@ library(DataExplorer)
 plot_qq(data_2)
 # categorical
 plot_bar(data_2, maxcat = 20, parallel = TRUE)
+```
 
 
 # Visualization 
@@ -311,16 +312,8 @@ summary(gender_inter_two)
 ## then the rank isn't sig we will remove the rank
 
 
-## our final model is 
-```{r}
-gender_inter_exp=lm(log_sal~gender * exper +rank + dept + clin+cert,data=data_2)
-summary(gender_inter_exp)
-```
-
-
 ## so our final model is
 ```{r}
-<<<<<<< HEAD
 gender_inter_exp=lm(log_sal~gender * exper +rank + dept + clin+cert,data=data_2)
 summary(gender_inter_exp)
 ## stratify exp levels:
@@ -328,7 +321,8 @@ data_stra_exp=data_2 %>%
   mutate(exper = as.factor(case_when(.$exper %in% c(0:5)~"very small", 
                             .$exper %in% c(5:10)~"small",
                             .$exper %in% c(11:15)~"median",
-                            TRUE >15~"large") ))
+                            .$exper %in% c(16:20)~"large",
+                            .$exper %in% c(21:37)~"very large") ))
 gender_inter_exp_1=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp %>% filter(exper=="very small"))
 summary(gender_inter_exp_1)
 gender_inter_exp_2=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp %>% filter(exper=="small"))
@@ -337,8 +331,9 @@ gender_inter_exp_3=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp
 summary(gender_inter_exp_3)
 gender_inter_exp_4=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp %>% filter(exper=="large"))
 summary(gender_inter_exp_4)
+gender_inter_exp_5=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp %>% filter(exper=="very large"))
+summary(gender_inter_exp_5)
 ```
-=======
 
 
 ## diaganosis
