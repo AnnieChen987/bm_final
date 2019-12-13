@@ -42,7 +42,7 @@ my_labels2 <- list(dept = "Dept,n%", clin="Clin n%", cert="Cert,n%",prate="Publi
 
 my_controls <- tableby.control(total = T,
   test=T,  
-  digits=4,
+  digits=2,
   numeric.stats = c("meansd", "medianq1q3"),
   cat.stats = c("countpct"),
   stats.labels = list(
