@@ -1,0 +1,306 @@
+---
+title: "Final code (final version)"
+author: "Yineng Chen"
+date: "2019/12/13"
+output: html_document
+
+---
+
+These are codes we use in our final version:
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,message = FALSE,warning = FALSE)
+library(tidyverse)
+library(arsenal)
+library(knitr)
+require(survival)
+```
+
+
+# Data exploration: descriptive and visualization
+
+```{r}
+# read dataset
+data_0=read_csv("Lawsuit.csv") %>% 
+  janitor::clean_names()
+
+# add variables: total salary and mean salary
+data=data_0 %>% mutate(
+  total_sal=sal94+sal95,
+  mean_sal=total_sal/2
+) %>% 
+  # get rid of 94 salary, 95 salary and total salary
+  dplyr::select(-sal94,-sal95,-total_sal)
+  
+
+# descriptive data
+
+my_labels2 <- list(dept = "Deptartment,n%", clin="Area of emphasis n%", cert="Certification,n%",prate="Publication rate",exper="Years since obtaining MD",
+                   mean_sal="Salary",rank="Rank,n%")
+
+my_controls <- tableby.control(total = T,
+  test=T,  
+  digits=4,
+  numeric.stats = c("meansd", "medianq1q3"),
+  cat.stats = c("countpct"),
+  stats.labels = list(
+    meansd ="Mean (SD)",
+    medianq1q3 = "Median (Q1, Q3)",
+    countpct = "N (%)"))
+
+data_1<-data %>% 
+  mutate(dept=factor(dept, labels=c("Molecular Biology","Physiology","Genetics","Pediatrics","Medicine","Surgery")),
+         gender=factor(gender, labels=c("Female","Male")),
+         clin=factor(clin, labels=c("Primarily research emphasis","Primarily clinical emphasis")),
+         cert=factor(cert, labels=c("not certified", "Board certified")),
+         rank=factor(rank,label=c("Assistant","Associate","Full professor"))
+         )
+
+# Table 1
+table <- tableby(gender ~ dept + clin+ cert + prate+exper+rank+mean_sal, data=data_1,control=my_controls)
+c=summary(table, title = "Table1:Descriptive statistics for by Gender and Test", labelTranslations = my_labels2, text=T)
+knitr::kable(c)
+```
+
+
+
+## distribution of y
+
+```{r}
+ggplot(data_1,aes(x=mean_sal))+geom_histogram(aes(y=..density..)) + geom_density(col = "black",alpha=0)
+```
+not normal
+
+```{r}
+library(HH)
+data_2=data_1 %>% 
+  mutate(
+    log_sal=log(mean_sal)
+  )
+  ggplot(data_2,aes(x=log_sal))+geom_histogram(aes(y=..density..)) + geom_density(col = "black",alpha=0)
+data_2=data_2 %>% 
+    dplyr::select(-id,-mean_sal)
+```
+
+
+# Visualization 
+```{r}
+library(patchwork)
+
+rank_gen = data_1 %>%
+  group_by(gender) %>%
+  ggplot(aes(x = rank, y = mean_sal, color = gender)) + 
+    geom_boxplot() 
+
+dept_gen = data_1 %>%
+  group_by(gender) %>%
+  ggplot(aes(x = dept, y = mean_sal, color = gender)) + 
+    geom_boxplot()
+
+clin_gen = data_1 %>%
+  group_by(gender) %>%
+  ggplot(aes(x = clin, y = mean_sal, color = gender)) + 
+    geom_boxplot()
+
+cert_gen = data_1 %>%
+  group_by(gender) %>%
+  ggplot(aes(x = cert, y = mean_sal, color = gender)) + 
+    geom_boxplot()
+
+exp_gen = data_1 %>%
+  group_by(gender) %>%
+  ggplot(aes(x = exper, y = mean_sal, color = gender)) + 
+    geom_point() +
+  geom_smooth(method="lm",aes(color=gender),se=FALSE)
+
+(rank_gen + dept_gen)/(clin_gen + cert_gen)
+
+exp_gen
+
+
+```
+
+
+# confounder one by one
+
+```{r}
+gender_only=lm(log_sal~gender,data=data_2)
+## coeffecient of gener is 0.3853
+
+gender_dept=lm(log_sal~gender+dept,data=data_2)
+summary(gender_dept)
+#### coeffecient of gener changed from 0.3853 to  0.20521(>10%)
+## dept is a confounder
+
+gender_clin=lm(log_sal~gender+clin,data=data_2)
+summary(gender_clin)
+#### coeffecient of gener changed from 0.3853 to  0.33718(12.4%)
+## clin is a confounder
+
+gender_cert=lm(log_sal~gender+cert,data=data_2)
+summary(gender_cert)
+#### coeffecient of gener changed from 0.3853 to  0.33285(13.6%)
+## cert is a confounder
+
+gender_prate=lm(log_sal~gender+prate,data=data_2)
+summary(gender_prate)
+#### coeffecient of gener changed from 0.3853 to  0.251814(>10%)
+## prate is a confouder
+
+gender_exper=lm(log_sal~gender+exper,data=data_2)
+summary(gender_exper)
+#### coeffecient of gener changed from 0.3853 to  0.30755(>10%)
+## exper is a confounder
+
+gender_rank=lm(log_sal~gender+rank,data=data_2)
+summary(gender_rank)
+#### coeffecient of gener changed from 0.3853 to  0.349481(<10%)
+## rank is not a confounder
+
+mulit_2=lm(log_sal~gender+dept+clin+cert+prate+exper,data=data_2)
+summary(mulit_2)
+## with very high adjR^2 in mulit_2
+
+anova(gender_only,mulit_2)
+## the p is smaller than 0.05
+```
+
+
+
+```{r}
+## check the vif
+vif(mulit_2)
+## remove prate
+##then the model is
+gender_method1=lm(log_sal~gender+dept+clin+cert+exper,data=data_2)
+summary(gender_method1)
+## but hard to find the stratified model, because the exper is continous variable
+```
+
+We are interested in the interaction effect of rank and experience.
+ Is rank a modifier?
+ Is experience a mpdifier?
+
+#  Is rank a modifier? 
+```{r}
+gender_inter_rank=lm(log_sal~gender * rank + dept+clin+cert+exper,data=data_2)
+summary(gender_inter_rank)
+
+
+##  then strtified the rank levels
+data_stra_assi=data_2 %>% 
+  filter(rank=="Assistant")
+data_stra_asso=data_2 %>% 
+  filter(rank=="Associate")
+data_stra_full=data_2 %>% 
+  filter(rank=="Full professor")
+## in assistant level
+model_stra1=lm(log_sal~gender+dept+clin+cert+exper,data=data_stra_assi)
+summary(model_stra1)
+
+model_stra2=lm(log_sal~gender+dept+clin+cert+exper,data=data_stra_asso)
+summary(model_stra2)
+
+model_stra3=lm(log_sal~gender+dept+clin+cert+exper,data=data_stra_full)
+summary(model_stra3)
+
+# yes
+```
+
+
+#  Is experience a modifier? 
+```{r}
+gender_inter_exp = lm(log_sal~gender * exper + dept+clin+cert+exper,data=data_2)
+summary(gender_inter_exp )
+
+
+gender_rank_inter_exp = lm(log_sal~gender * exper + dept+clin+cert+ rank,data=data_2)
+summary(gender_rank_inter_exp)
+
+gender_inter_two=lm(log_sal~gender * rank + dept+clin+cert+exper+gender:exper,data=data_2)
+summary(gender_inter_two)
+
+```
+
+
+
+## so our final model is
+```{r}
+gender_inter_exp=lm(log_sal~gender * exper +rank + dept + clin+cert,data=data_2)
+summary(gender_inter_exp)
+## stratify exp levels:
+data_stra_exp=data_2 %>% 
+  mutate(exper = as.factor(case_when(.$exper %in% c(0:5)~"very small", 
+                            .$exper %in% c(5:10)~"small",
+                            .$exper %in% c(11:15)~"median",
+                            .$exper %in% c(16:20)~"large",
+                            .$exper %in% c(21:37)~"very large") ))
+gender_inter_exp_1=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp %>% filter(exper=="very small"))
+summary(gender_inter_exp_1)
+gender_inter_exp_2=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp %>% filter(exper=="small"))
+summary(gender_inter_exp_2)
+gender_inter_exp_3=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp %>% filter(exper=="median"))
+summary(gender_inter_exp_3)
+gender_inter_exp_4=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp %>% filter(exper=="large"))
+summary(gender_inter_exp_4)
+gender_inter_exp_5=lm(log_sal~gender +rank + dept + clin+cert,data=data_stra_exp %>% filter(exper=="very large"))
+summary(gender_inter_exp_5)
+```
+
+
+## diaganosis
+```{r}
+par(mfrow = c(2, 2))
+plot(gender_inter_exp)
+```
+## meet the constant varience and normality assumption
+## 184 maybe a potential influential point
+
+## checking outlier and influential
+### outlier in Y
+```{r}
+rstandard(gender_inter_exp)
+```
+Any observation with an absolute studentized residual ri greater than 2.5 is considered an outlier. In this dataset, we think 184 case is an outliers in Y.
+
+
+### outlier in X
+```{r}
+hat=hatvalues(gender_inter_exp)
+hat2=hat %>%
+data.frame()
+hat3=mutate(hat2,
+hii=hat2[,1])
+state_name=rownames(hat2) %>%
+data.frame()
+state_name2= mutate(state_name,
+name=state_name[,1])
+hat_final=cbind(cbind(dplyr::select(state_name2,name),dplyr::select(hat3,hii)))
+hat_final
+hat_final %>%
+filter(hii>0.2)
+```
+## no outlier in X
+
+## influential cases
+```{r}
+c=influence.measures(gender_inter_exp)
+c
+```
+
+## try the model without outlier
+```{r}
+data_no_184=data_2[-184,]
+gender_no_184=lm(log_sal~gender * exper +rank + dept + clin+cert,data=data_no_184)
+summary(gender_no_184)
+```
+## model changed a lot so it is an influential point
+
+```{r}
+par(mfrow = c(2, 2))
+plot(gender_no_184)
+```
+
+
