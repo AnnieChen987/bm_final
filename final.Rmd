@@ -387,3 +387,9 @@ gender_no_184=lm(log_sal~gender * exper +rank + dept + clin+cert,data=data_no_18
 summary(gender_no_184)
 ```
 ## model changed a lot so it is an influential point
+
+```{r}
+par(mfrow = c(2, 2))
+plot(gender_no_184)
+```
+
