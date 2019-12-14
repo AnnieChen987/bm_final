@@ -292,3 +292,35 @@ plot(gender_no_184)
 ```
 
 
+## try another descriptive table of salary in gender
+```{r}
+# descriptive data
+
+my_labels3 <- list(dept = "Deptartment", clin="Area of emphasis n%", cert="Certification,n%",prate="Publication rate",exper="Years since obtaining MD",
+                   mean_sal="Salary",rank="Rank,n%")
+
+my_controls2 <- tableby.control(total = T,
+  test=T,  
+  digits=0,
+  numeric.stats = c("meansd", "medianq1q3"),
+  cat.stats = c("countpct"),
+  stats.labels = list(
+    meansd ="Mean (SD)",
+    medianq1q3 = "Median (Q1, Q3)",
+    countpct = "N (%)"))
+
+data_1<-data %>% 
+  mutate(dept=factor(dept, labels=c("Molecular Biology","Physiology","Genetics","Pediatrics","Medicine","Surgery")),
+         gender=factor(gender, labels=c("Female","Male")),
+         clin=factor(clin, labels=c("Primarily research emphasis","Primarily clinical emphasis")),
+         cert=factor(cert, labels=c("not certified", "Board certified")),
+         rank=factor(rank,label=c("Assistant","Associate","Full professor"))
+         )
+
+# Table 1
+table <- tableby(gender ~ dept + clin+ cert + prate+exper+rank+mean_sal, data=data_1,control=my_controls2)
+d=summary(table, title = "Table1:Descriptive statistics for by Gender and Test", labelTranslations = my_labels3, text=T)
+knitr::kable(d)
+```
+
+
