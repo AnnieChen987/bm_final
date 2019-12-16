@@ -161,10 +161,10 @@ summary(gender_exper)
 
 gender_rank=lm(log_sal~gender+rank,data=data_2)
 summary(gender_rank)
-#### coeffecient of gener changed from 0.3853 to  0.349481(<10%)
-## rank is not a confounder
+#### coeffecient of gener changed from 0.3853 to  0.349481(around 10%,9.2%)
+## rank is  a potential confounder
 
-mulit_2=lm(log_sal~gender+dept+clin+cert+prate+exper,data=data_2)
+mulit_2=lm(log_sal~gender+dept+clin+rank+cert+prate+exper,data=data_2)
 summary(mulit_2)
 ## with very high adjR^2 in mulit_2
 
@@ -179,7 +179,7 @@ anova(gender_only,mulit_2)
 vif(mulit_2)
 ## remove prate
 ##then the model is
-gender_method1=lm(log_sal~gender+dept+clin+cert+exper,data=data_2)
+gender_method1=lm(log_sal~gender+dept+clin+rank+cert+exper,data=data_2)
 summary(gender_method1)
 ## but hard to find the stratified model, because the exper is continous variable
 ```
@@ -194,7 +194,7 @@ gender_inter_rank=lm(log_sal~gender * rank + dept+clin+cert+exper,data=data_2)
 summary(gender_inter_rank)
 
 
-##  then strtified the rank levels
+##  then stratified the rank levels
 data_stra_assi=data_2 %>% 
   filter(rank=="Assistant")
 data_stra_asso=data_2 %>% 
@@ -217,15 +217,14 @@ summary(model_stra3)
 
 #  Is experience a modifier? 
 ```{r}
-gender_inter_exp = lm(log_sal~gender * exper + dept+clin+cert+exper,data=data_2)
+gender_inter_exp = lm(log_sal~gender * exper + rank+dept+clin+cert+exper,data=data_2)
 summary(gender_inter_exp )
 
 
-gender_rank_inter_exp = lm(log_sal~gender * exper + dept+clin+cert+ rank,data=data_2)
-summary(gender_rank_inter_exp)
-
-gender_inter_two=lm(log_sal~gender * rank + dept+clin+cert+exper+gender:exper,data=data_2)
+gender_inter_two=lm(log_sal~gender * rank + dept+clin+cert+exper+gender*exper,data=data_2)
 summary(gender_inter_two)
+## after putting two interaction, the rank becomes non-sig, so don't put rank as an interaction
+## but still put rank as counfounder.
 
 ```
 

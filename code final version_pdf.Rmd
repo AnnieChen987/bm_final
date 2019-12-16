@@ -163,7 +163,7 @@ summary(gender_exper)
 
 gender_rank=lm(log_sal~gender+rank,data=data_2)
 summary(gender_rank)
-#### coeffecient of gener changed from 0.3853 to  0.349481(<10%)
+#### coeffecient of gener changed from 0.3853 to  0.349481(around 10%,9.2%)
 ## rank is not a confounder
 
 mulit_2=lm(log_sal~gender+dept+clin+cert+prate+exper,data=data_2)
