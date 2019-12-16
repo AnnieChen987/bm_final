@@ -294,6 +294,8 @@ plot(gender_no_184)
 
 ## try another descriptive table of salary in gender
 ```{r}
+
+
 # descriptive data
 
 my_labels3 <- list(dept = "Deptartment", clin="Area of emphasis n%", cert="Certification,n%",prate="Publication rate",exper="Years since obtaining MD",
